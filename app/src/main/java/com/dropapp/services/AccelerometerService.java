@@ -1,4 +1,4 @@
-package com.dropapp.dropapp;
+package com.dropapp.services;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -10,6 +10,21 @@ import android.hardware.SensorManager;
  * Created by benjaminchevoor on 3/7/16.
  */
 public class AccelerometerService implements SensorEventListener {
+
+    private static class AccelerometerDropModel {
+
+        public void newData(float x, float y, float z) {
+            //TODO write drop detection algorithm here
+
+            boolean dropDetected = false;
+
+            if (dropDetected) {
+                //notify that drop has been detected
+                DropDetectionService.dropDetected();
+            }
+        }
+
+    }
 
     /**
      * An Exception raised when no accelerometer sensor is available on this device.
@@ -24,6 +39,7 @@ public class AccelerometerService implements SensorEventListener {
 
     private Sensor accelerometer;
     private RawAccelerometerDataListener listener;
+    private final AccelerometerDropModel dropModel = new AccelerometerDropModel();
 
     public void initialize(Context context) throws NoAccelerometerSensorException  {
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -46,8 +62,14 @@ public class AccelerometerService implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+
+            this.dropModel.newData(x, y, z);
+
             if (this.listener != null) {
-                this.listener.newData(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
+                this.listener.newData(x, y, z);
             }
         }
     }

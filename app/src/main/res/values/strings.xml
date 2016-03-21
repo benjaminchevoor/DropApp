@@ -5,4 +5,5 @@
     <!-- Colors -->
     <color name="appBackground">#1e1e1e</color>
     <color name="fontColor">#dddddd</color>
+    <string name="title_activity_data_view">DataViewActivity</string>
 </resources>
