@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.db.chart.view.BarChartView;
-import com.dropapp.dropapp.R;
+import com.dropapp.R;
 import com.dropapp.services.AccelerometerService;
 
 public class DataViewActivity extends AppCompatActivity {

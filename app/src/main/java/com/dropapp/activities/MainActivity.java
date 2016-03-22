@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.dropapp.dropapp.R;
+import com.dropapp.R;
 
 public class MainActivity extends Activity {
 

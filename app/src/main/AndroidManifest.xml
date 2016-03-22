@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.dropapp.dropapp"
+<manifest package="com.dropapp"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.dropapp.activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -21,13 +21,13 @@
         </activity>
 
         <service
-            android:name="com.dropapp.services.DropDetectionService"
+            android:name=".services.DropDetectionService"
             android:enabled="true"
             android:exported="true">
         </service>
 
         <activity
-            android:name="com.dropapp.activities.DataViewActivity"
+            android:name=".activities.DataViewActivity"
             android:label="@string/title_activity_data_view"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
