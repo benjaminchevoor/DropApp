@@ -2,17 +2,18 @@
 <manifest package="com.dropapp"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -28,8 +29,7 @@
 
         <activity
             android:name=".activities.DataViewActivity"
-            android:label="@string/title_activity_data_view"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_activity_data_view">
         </activity>
     </application>
 
