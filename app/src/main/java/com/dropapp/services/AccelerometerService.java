@@ -11,7 +11,7 @@ import android.hardware.SensorManager;
  */
 public class AccelerometerService implements SensorEventListener {
 
-    private static class AccelerometerDropModel {
+    private class AccelerometerDropModel {
 
         public void newData(float x, float y, float z) {
             //TODO write drop detection algorithm here
@@ -19,8 +19,7 @@ public class AccelerometerService implements SensorEventListener {
             boolean dropDetected = false;
 
             if (dropDetected) {
-                //notify that drop has been detected
-                DropDetectionService.dropDetected();
+                AccelerometerService.this.dropListener.dropDetected();
             }
         }
 
@@ -40,15 +39,18 @@ public class AccelerometerService implements SensorEventListener {
     private Sensor accelerometer;
     private RawAccelerometerDataListener listener;
     private final AccelerometerDropModel dropModel = new AccelerometerDropModel();
+    private DropListener dropListener;
 
-    public void initialize(Context context) throws NoAccelerometerSensorException  {
+    public void initialize(DropListener dropListener, Context context) throws NoAccelerometerSensorException  {
+        this.dropListener = dropListener;
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
         this.accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
         if (this.accelerometer == null) {
             throw new NoAccelerometerSensorException();
         } else {
-            sensorManager.registerListener(this, this.accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, this.accelerometer, SensorManager.SENSOR_DELAY_GAME);
         }
     }
 
@@ -79,7 +81,7 @@ public class AccelerometerService implements SensorEventListener {
         //do nothing
     }
 
-    public void setRawAccelerometerDataListen(RawAccelerometerDataListener listener) {
+    public void setRawAccelerometerDataListener(RawAccelerometerDataListener listener) {
         this.listener = listener;
     }
 }

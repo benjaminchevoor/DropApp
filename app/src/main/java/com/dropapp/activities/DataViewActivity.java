@@ -44,6 +44,7 @@ public class DataViewActivity extends AppCompatActivity {
 
     private File file = null;
     private PrintWriter fileWriter = null;
+    private long startRecordTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +75,12 @@ public class DataViewActivity extends AppCompatActivity {
         barChartView.addData(barSet);
         barChartView.show();
 
-        this.accelerometerService.setRawAccelerometerDataListen(new AccelerometerService.RawAccelerometerDataListener() {
+        this.accelerometerService.setRawAccelerometerDataListener(new AccelerometerService.RawAccelerometerDataListener() {
             @Override
             public void newData(float x, float y, float z) {
                 double avg = Math.sqrt((x * x) + (y * y) + (z * z));
                 String format = String.format("%9.5f, %9.5f, %9.5f, %9.5f\n", x, y, z, avg);
-                outputTextView.append(format);
+//                outputTextView.append(format);
 
                 xBar.setValue(x);
                 yBar.setValue(y);
@@ -131,6 +132,8 @@ public class DataViewActivity extends AppCompatActivity {
                         this.file = new File(folder, fileName);
                         this.fileWriter = new PrintWriter(this.file);
                         this.recordButton.setText("stop");
+
+                        this.startRecordTime = System.currentTimeMillis();
                     } catch (Exception e) {
                         Toast.makeText(DataViewActivity.this, "Failed to open file to write", Toast.LENGTH_SHORT).show();
                     }
@@ -143,6 +146,9 @@ public class DataViewActivity extends AppCompatActivity {
         } else {
             this.recordButton.setText("record");
             try {
+                long duration = System.currentTimeMillis() - startRecordTime;
+                fileWriter.write("\n\nDuration: " + duration + "ms");
+
                 PrintWriter fw = this.fileWriter;
                 final File savedFile = this.file;
 
@@ -250,7 +256,7 @@ public class DataViewActivity extends AppCompatActivity {
         super.onResume();
 
         try {
-            this.accelerometerService.initialize(this);
+            this.accelerometerService.initialize(null, this);
             this.outputTextView.setText("Accelerometer found. Starting...\n");
             this.outputTextView.append(String.format("%9s, %9s, %9s, %9s\n", "x", "y", "z", "avg"));
         } catch (AccelerometerService.NoAccelerometerSensorException e) {

@@ -4,18 +4,27 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-public class DropDetectionService extends Service {
+public class DropDetectionService extends Service implements DropListener {
 
     private final AccelerometerService accelerometerService = new AccelerometerService();
+    private final DropServiceBinder dropDetectionService = new DropServiceBinder() {
 
-    public static void dropDetected() {
-        //TODO
+        @Override
+        public void clearDropNotification() {
+            //todo
+        }
+    };
+
+    @Override
+    public void dropDetected() {
+        //TODO handle notification
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
-            this.accelerometerService.initialize(this.getApplicationContext());
+            this.accelerometerService.initialize(this, this.getApplicationContext());
+            this.accelerometerService.setRawAccelerometerDataListener(this.dropDetectionService);
         } catch (AccelerometerService.NoAccelerometerSensorException e) {
             //BAD
             e.printStackTrace();
@@ -26,8 +35,7 @@ public class DropDetectionService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        //todo
-        return null;
+        return this.dropDetectionService;
     }
 
     @Override
