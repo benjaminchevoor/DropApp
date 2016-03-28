@@ -29,7 +29,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
@@ -39,5 +39,11 @@
             android:layout_height="wrap_content"
             android:text="View Data"
             android:id="@+id/viewDataButton"/>
+
+        <ImageButton
+            android:layout_width="45dp"
+            android:layout_height="41dp"
+            android:id="@+id/settingsButton"
+            android:src="@android:drawable/ic_menu_preferences" />
     </LinearLayout>
 </LinearLayout>

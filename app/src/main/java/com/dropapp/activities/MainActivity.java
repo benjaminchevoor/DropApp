@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.dropapp.R;
@@ -31,6 +32,15 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, DataViewActivity.class);
+                startActivity(i);
+            }
+        });
+
+        ImageButton settingsButton = (ImageButton) this.findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(i);
             }
         });
