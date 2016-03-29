@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
         toggleServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Fuck you", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Have a nice day!", Toast.LENGTH_SHORT).show();
             }
         });
 
