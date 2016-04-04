@@ -8,6 +8,7 @@ March 14-26 Progress:
   Created github repositiory
   Mapped out features
   Starting taking accelorometer data as a service
+  Display accelorometer data on the app in graph and numeric form
   
 March 27-April 2 Weekly Progress:
   Modified the app to record accelorometer data
