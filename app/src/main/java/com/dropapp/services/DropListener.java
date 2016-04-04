@@ -8,6 +8,11 @@ public interface DropListener {
     /**
      * Called when a drop has been detected by a sensor.
      */
-    void dropDetected();
+    void raiseDroppedNotification();
+
+    /**
+     * Called when a drop has been detected and the notification has not been cleared.
+     */
+    void raiseDroppedAlarm();
 
 }

@@ -19,7 +19,7 @@ public class AccelerometerService implements SensorEventListener {
             boolean dropDetected = false;
 
             if (dropDetected) {
-                AccelerometerService.this.dropListener.dropDetected();
+                AccelerometerService.this.dropListener.raiseDroppedNotification();
             }
         }
 
