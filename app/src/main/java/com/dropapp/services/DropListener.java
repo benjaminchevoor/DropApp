@@ -5,14 +5,25 @@ package com.dropapp.services;
  */
 public interface DropListener {
 
-    /**
-     * Called when a drop has been detected by a sensor.
-     */
-    void raiseDroppedNotification();
+    enum State {
+        MONITORING,
+        DROPPED_NOTIFIED,
+        DROPPED_ALARMED
+    }
 
     /**
-     * Called when a drop has been detected and the notification has not been cleared.
+     * Called when the drop has been 'cleared' by a sensor.
      */
-    void raiseDroppedAlarm();
+    void clearDrop();
 
+    /**
+     * Notifies the system that there has been a drop.
+     */
+    void notifyDrop();
+
+    /**
+     * Returns the current state of the drop service.
+     * @return  the current {@link com.dropapp.services.DropListener.State}
+     */
+    State getState();
 }
