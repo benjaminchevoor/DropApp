@@ -35,6 +35,10 @@ public class MainActivity extends Activity {
             }
         });
 
+        if (DropDetectionService.IS_RUNNING) {
+            toggleServiceButton.setText("STOP");
+        }
+
         Button viewDataButton = (Button) this.findViewById(R.id.viewDataButton);
         viewDataButton.setOnClickListener(new View.OnClickListener() {
             @Override

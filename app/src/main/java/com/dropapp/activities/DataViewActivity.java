@@ -1,8 +1,11 @@
 package com.dropapp.activities;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -22,15 +26,28 @@ import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.db.chart.view.BarChartView;
 import com.dropapp.R;
-import com.dropapp.services.AccelerometerService;
+import com.dropapp.logger.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DataViewActivity extends AppCompatActivity {
+
+    private final BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (outputTextView != null && intent != null) {
+                if (Logger.BROADCAST.equals(intent.getAction())) {
+                    outputTextView.append(Arrays.toString(intent.getStringArrayExtra(Logger.BROADCAST_ARGS)));
+                    outputTextView.append("\n");
+                }
+            }
+        }
+    };
 
     private Button recordButton;
     private EditText fileNameEditText;
@@ -39,7 +56,6 @@ public class DataViewActivity extends AppCompatActivity {
     private Bar yBar;
     private Bar zBar;
 
-    private final AccelerometerService accelerometerService = new AccelerometerService();
     private boolean isResumed = false;
 
     private File file = null;
@@ -75,24 +91,24 @@ public class DataViewActivity extends AppCompatActivity {
         barChartView.addData(barSet);
         barChartView.show();
 
-        this.accelerometerService.setRawAccelerometerDataListener(new AccelerometerService.RawAccelerometerDataListener() {
-            @Override
-            public void newData(float x, float y, float z) {
-                double avg = Math.sqrt((x * x) + (y * y) + (z * z));
-                String format = String.format("%9.5f, %9.5f, %9.5f, %9.5f\n", x, y, z, avg);
-//                outputTextView.append(format);
-
-                xBar.setValue(x);
-                yBar.setValue(y);
-                zBar.setValue(z);
-                barChartView.show();
-
-                PrintWriter pw = fileWriter;
-                if (pw != null) {
-                    pw.write(format);
-                }
-            }
-        });
+//        this.accelerometerService.setRawAccelerometerDataListener(new AccelerometerService.RawAccelerometerDataListener() {
+//            @Override
+//            public void newData(float x, float y, float z) {
+//                double avg = Math.sqrt((x * x) + (y * y) + (z * z));
+//                String format = String.format("%9.5f, %9.5f, %9.5f, %9.5f\n", x, y, z, avg);
+////                outputTextView.append(format);
+//
+//                xBar.setValue(x);
+//                yBar.setValue(y);
+//                zBar.setValue(z);
+//                barChartView.show();
+//
+//                PrintWriter pw = fileWriter;
+//                if (pw != null) {
+//                    pw.write(format);
+//                }
+//            }
+//        });
 
         this.fileNameEditText = (EditText) this.findViewById(R.id.fileNameEditText);
 
@@ -255,13 +271,13 @@ public class DataViewActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        try {
-            this.accelerometerService.initialize(null, this);
-            this.outputTextView.setText("Accelerometer found. Starting...\n");
-            this.outputTextView.append(String.format("%9s, %9s, %9s, %9s\n", "x", "y", "z", "avg"));
-        } catch (AccelerometerService.NoAccelerometerSensorException e) {
-            this.outputTextView.setText("Error! No accelerometer available.");
-        }
+//        try {
+//            this.accelerometerService.initialize(null, this);
+//            this.outputTextView.setText("Accelerometer found. Starting...\n");
+//            this.outputTextView.append(String.format("%9s, %9s, %9s, %9s\n", "x", "y", "z", "avg"));
+//        } catch (AccelerometerService.NoAccelerometerSensorException e) {
+//            this.outputTextView.setText("Error! No accelerometer available.");
+//        }
 
         this.isResumed = true;
 
@@ -285,15 +301,19 @@ public class DataViewActivity extends AppCompatActivity {
                 }
             }
         }).start();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(logBroadcastReceiver, new IntentFilter(Logger.BROADCAST));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        this.accelerometerService.uninitialize(this);
+//        this.accelerometerService.uninitialize(this);
 
         this.isResumed = false;
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(logBroadcastReceiver);
     }
 
 }

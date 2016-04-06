@@ -6,14 +6,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.dropapp.logger.AccelerometerLogger;
+
 /**
  * Created by benjaminchevoor on 3/7/16.
  */
 public class AccelerometerService implements SensorEventListener {
 
-    private static class AccelerometerDropModel {
+    public static class AccelerometerDropModel {
 
-        enum State {
+        public enum State {
             /**
              * Actively monitoring sensor for drop.
              */
@@ -37,12 +39,14 @@ public class AccelerometerService implements SensorEventListener {
         private static final double DROP_GRACE_PERIOD = 1_000;
         private static final double DROP_REST_PERIOD = 5_000;
 
+        private final Context context;
         private final DropListener dropListener;
         private State currentState = State.MONITORING;
         private long dropEpoch;
 
-        public AccelerometerDropModel(DropListener dropListener) {
+        public AccelerometerDropModel(DropListener dropListener, Context context) {
             this.dropListener = dropListener;
+            this.context = context;
         }
 
         private double getVector(float x, float y, float z) {
@@ -60,12 +64,23 @@ public class AccelerometerService implements SensorEventListener {
                             if (vector > DROPPED_VECTOR_THRESHOLD) {
                                 this.dropEpoch = System.currentTimeMillis();
                                 this.currentState = State.DROP_GRACE_PERIOD;
+
+                                try {
+                                    AccelerometerLogger.logTransition(this.context, State.DROP_GRACE_PERIOD);
+                                } catch (Exception e) {
+                                    //do nothing
+                                }
                             }
                             break;
 
                         case DROP_GRACE_PERIOD:
                             if (this.dropEpoch + DROP_GRACE_PERIOD < System.currentTimeMillis()) {
                                 this.currentState = State.DROP_REST;
+                                try {
+                                    AccelerometerLogger.logTransition(this.context, State.DROP_REST);
+                                } catch (Exception e) {
+                                    //do nothing
+                                }
                             }
                             break;
 
@@ -93,8 +108,17 @@ public class AccelerometerService implements SensorEventListener {
          * Resets this model back to the original {@link State#MONITORING} state.
          */
         private void reset() {
+            if (this.currentState != State.MONITORING) {
+                try {
+                    AccelerometerLogger.logTransition(this.context, State.MONITORING);
+                } catch (Exception e) {
+                    //do nothing
+                }
+            }
+
             this.currentState = State.MONITORING;
             this.dropEpoch = 0;
+
         }
 
         /**
@@ -105,6 +129,8 @@ public class AccelerometerService implements SensorEventListener {
          * @return          true if resting, false otherwise.
          */
         private boolean validateRest(double vector) {
+            // This code could use refinement,
+            // Sort of a naive approach
             return vector < 10.5 && vector > 9.0;
         }
 
@@ -124,9 +150,11 @@ public class AccelerometerService implements SensorEventListener {
     private Sensor accelerometer;
     private RawAccelerometerDataListener listener;
     private AccelerometerDropModel dropModel;
+    private Context context;
 
     public void initialize(DropListener dropListener, Context context) throws NoAccelerometerSensorException  {
-        this.dropModel = new AccelerometerDropModel(dropListener);
+        this.context = context;
+        this.dropModel = new AccelerometerDropModel(dropListener, this.context);
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
         this.accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);

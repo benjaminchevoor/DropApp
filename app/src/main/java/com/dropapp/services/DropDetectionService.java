@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.dropapp.logger.DropStateLogger;
+import com.dropapp.logger.Logger;
 import com.dropapp.notifications.UserNotifier;
 
 import java.util.Timer;
@@ -55,17 +57,35 @@ public class DropDetectionService extends Service {
                     this.currentState = State.DROPPED_NOTIFIED;
                     this.scheduleTask(DROPPED_NOTIFY_PERIOD_MILLIS);
                     UserNotifier.raiseNotification(this.getContext());
+
+                    try {
+                        DropStateLogger.logTransition(this.getContext(), State.DROPPED_NOTIFIED);
+                    } catch (Exception e) {
+                        //do nothing
+                    }
                     break;
 
                 case DROPPED_NOTIFIED:
                     this.currentState = State.DROPPED_ALARMED;
                     this.scheduleTask(DROPPED_ALARM_PERIOD_MILLIS);
                     UserNotifier.raiseAlarm(this.getContext());
+
+                    try {
+                        DropStateLogger.logTransition(this.getContext(), State.DROPPED_ALARMED);
+                    } catch (Exception e) {
+                        //do nothing
+                    }
                     break;
 
                 case DROPPED_ALARMED:
                     this.currentState = State.MONITORING;
                     UserNotifier.notifyPhoneLostEvent(this.getContext());
+
+                    try {
+                        DropStateLogger.logTransition(this.getContext(), State.MONITORING);
+                    } catch (Exception e) {
+                        //do nothing
+                    }
                     break;
             }
         }
@@ -121,6 +141,12 @@ public class DropDetectionService extends Service {
 
         Toast.makeText(this.context, "Started!", Toast.LENGTH_SHORT).show();
 
+        try {
+            Logger.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return Service.START_STICKY;
     }
 
@@ -137,5 +163,7 @@ public class DropDetectionService extends Service {
         Toast.makeText(this.context, "Stopped!", Toast.LENGTH_SHORT).show();
 
         IS_RUNNING = false;
+
+        Logger.stop();
     }
 }
