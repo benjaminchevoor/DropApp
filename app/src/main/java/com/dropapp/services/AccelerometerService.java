@@ -43,14 +43,42 @@ public class AccelerometerService implements SensorEventListener {
         private final DropListener dropListener;
         private State currentState = State.MONITORING;
         private long dropEpoch;
+        //prevous ten reads. 0 = last read, 9 = tenth past read;
+        private double[] prevTen = new double[9];
 
         public AccelerometerDropModel(DropListener dropListener, Context context) {
             this.dropListener = dropListener;
             this.context = context;
+            //initialize previous ten reads
+            for (int i = 0; i <= 9; i++)
+                this.prevTen[i] = -1;
         }
 
         private double getVector(float x, float y, float z) {
             return Math.sqrt((x * x) + (y * y) + (z * z));
+        }
+
+        private void storePrevTen(double curAvg){
+            for(int i = 9; i >=1; i--){
+                this.prevTen[i] = this.prevTen[i-1];
+            }
+            this.prevTen[0] = curAvg;
+        }
+
+        private double getAvgOfPrevTen(){
+            double avg = -1;
+            int count = 10;
+            double sum = 0;
+            for(int i = 0; i<=9; i++){
+                if(this.prevTen[i] == -1){
+                    count--;
+                }
+                else
+                    sum = sum + this.prevTen[i];
+            }
+            avg = sum/count;
+
+            return avg;
         }
 
         public void newData(float x, float y, float z) {
@@ -118,7 +146,9 @@ public class AccelerometerService implements SensorEventListener {
 
             this.currentState = State.MONITORING;
             this.dropEpoch = 0;
-
+            //reset previous ten reads
+            for (int i = 0; i <= 9; i++)
+                this.prevTen[i] = -1;
         }
 
         /**
@@ -129,9 +159,16 @@ public class AccelerometerService implements SensorEventListener {
          * @return          true if resting, false otherwise.
          */
         private boolean validateRest(double vector) {
-            // This code could use refinement,
-            // Sort of a naive approach
-            return vector < 10.5 && vector > 9.0;
+            // Kind of dangerous because this assumes vector = rest avg so this all depends
+            // on the amount of time we wait to validate to ensure vector = rest avg
+            for(int i = 0; i<=9; i++){
+                if(this.prevTen[i] > vector)
+                    if(this.prevTen[i] - vector > 1.5)
+                        return false;
+                    else if(this.prevTen[i] - vector < -1.5)
+                        return false;
+            }
+            return true;
         }
 
     }
