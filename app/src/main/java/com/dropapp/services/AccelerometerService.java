@@ -49,7 +49,7 @@ public class AccelerometerService implements SensorEventListener {
         private long dropEpoch;
 
         //prevous ten reads. 0 = last read, 9 = tenth past read;
-        private double[] previousVectors = new double[10];
+        private double[] previousVectors = new double[PREVIOUS_VECTORS_ARRAY_SIZE];
 
         public AccelerometerDropModel(DropListener dropListener, Context context) {
             this.dropListener = dropListener;
