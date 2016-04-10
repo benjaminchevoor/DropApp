@@ -8,6 +8,8 @@ import android.hardware.SensorManager;
 
 import com.dropapp.logger.AccelerometerLogger;
 
+import java.util.Arrays;
+
 /**
  * Created by benjaminchevoor on 3/7/16.
  */
@@ -39,19 +41,22 @@ public class AccelerometerService implements SensorEventListener {
         private static final double DROP_GRACE_PERIOD = 1_000;
         private static final double DROP_REST_PERIOD = 5_000;
 
+        private static final int PREVIOUS_VECTORS_ARRAY_SIZE = 10;
+
         private final Context context;
         private final DropListener dropListener;
         private State currentState = State.MONITORING;
         private long dropEpoch;
+
         //prevous ten reads. 0 = last read, 9 = tenth past read;
-        private double[] prevTen = new double[9];
+        private double[] previousVectors = new double[10];
 
         public AccelerometerDropModel(DropListener dropListener, Context context) {
             this.dropListener = dropListener;
             this.context = context;
             //initialize previous ten reads
-            for (int i = 0; i <= 9; i++)
-                this.prevTen[i] = -1;
+
+            Arrays.fill(this.previousVectors, -1);
         }
 
         private double getVector(float x, float y, float z) {
@@ -59,23 +64,23 @@ public class AccelerometerService implements SensorEventListener {
         }
 
         private void storePrevTen(double curAvg){
-            for(int i = 9; i >=1; i--){
-                this.prevTen[i] = this.prevTen[i-1];
-            }
-            this.prevTen[0] = curAvg;
+            System.arraycopy(this.previousVectors, 0, this.previousVectors, 1, PREVIOUS_VECTORS_ARRAY_SIZE - 1);
+            this.previousVectors[0] = curAvg;
         }
 
         private double getAvgOfPrevTen(){
             double avg = -1;
             int count = 10;
             double sum = 0;
-            for(int i = 0; i<=9; i++){
-                if(this.prevTen[i] == -1){
+
+            for (int i = 0; i < PREVIOUS_VECTORS_ARRAY_SIZE; i++) {
+                if (this.previousVectors[i] == -1) {
                     count--;
+                } else {
+                    sum = sum + this.previousVectors[i];
                 }
-                else
-                    sum = sum + this.prevTen[i];
             }
+
             avg = sum/count;
 
             return avg;
@@ -142,13 +147,13 @@ public class AccelerometerService implements SensorEventListener {
                 } catch (Exception e) {
                     //do nothing
                 }
+
+                //reset previous reads
+                Arrays.fill(this.previousVectors, -1);
             }
 
             this.currentState = State.MONITORING;
             this.dropEpoch = 0;
-            //reset previous ten reads
-            for (int i = 0; i <= 9; i++)
-                this.prevTen[i] = -1;
         }
 
         /**
@@ -161,11 +166,11 @@ public class AccelerometerService implements SensorEventListener {
         private boolean validateRest(double vector) {
             // Kind of dangerous because this assumes vector = rest avg so this all depends
             // on the amount of time we wait to validate to ensure vector = rest avg
-            for(int i = 0; i<=9; i++){
-                if(this.prevTen[i] > vector)
-                    if(this.prevTen[i] - vector > 1.5)
+            for (int i = 0; i < 10; i++) {
+                if (this.previousVectors[i] > vector)
+                    if (this.previousVectors[i] - vector > 1.5)
                         return false;
-                    else if(this.prevTen[i] - vector < -1.5)
+                    else if (this.previousVectors[i] - vector < -1.5)
                         return false;
             }
             return true;
