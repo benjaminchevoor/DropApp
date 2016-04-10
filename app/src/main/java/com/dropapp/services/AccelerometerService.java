@@ -118,7 +118,7 @@ public class AccelerometerService implements SensorEventListener {
                             break;
 
                         case DROP_REST:
-                            if (!validateRest(vector)) {
+                            if (onPerson(vector)) {
                                 //user has moved their phone, reset
                                 this.reset();
                             } else if (this.dropEpoch + DROP_GRACE_PERIOD + DROP_REST_PERIOD < System.currentTimeMillis()) {
@@ -163,7 +163,7 @@ public class AccelerometerService implements SensorEventListener {
          * @param vector    the vector value
          * @return          true if resting, false otherwise.
          */
-        private boolean validateRest(double vector) {
+        private boolean onPerson(double vector) {
             // Kind of dangerous because this assumes vector = rest avg so this all depends
             // on the amount of time we wait to validate to ensure vector = rest avg
             for (int i = 0; i < 10; i++) {
