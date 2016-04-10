@@ -30,6 +30,7 @@ public class Settings {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         putDouble(editor, "threshold", threshold);
+        editor.commit();
     }
 
     public static double getThreshold (Context context) {
