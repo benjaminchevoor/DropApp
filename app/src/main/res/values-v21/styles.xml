@@ -6,4 +6,10 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary_material_dark_1</item>
+        <item name="android:colorBackground">@color/background_material_dark</item>
+        <item name="android:navigationBarColor">@color/black</item>
+    </style>
 </resources>
