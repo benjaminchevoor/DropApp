@@ -26,5 +26,11 @@ April 11-17 weekly progress:
   Implemented correct grace period behavior
     if phone moves when checking for rest do not fire alarm
   Created logo!
-  
+  TODO
+  Hook up android activity
+  fix clearing notification not going back to monitor bug
+  Email notification with gps coordinates
+  email setup UI side
+  Initial shake test to determine max
+  app setup wizard/calibration
   
