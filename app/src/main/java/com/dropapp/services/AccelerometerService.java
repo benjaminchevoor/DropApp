@@ -189,7 +189,7 @@ public class AccelerometerService implements SensorEventListener {
         void newData(float x, float y, float z);
     }
 
-    private Sensor accelerometer;
+    private Sensor accelerometer; 
     private RawAccelerometerDataListener listener;
     private AccelerometerDropModel dropModel;
     private Context context;

@@ -23,7 +23,8 @@ public class UserNotifier {
      * @param context   the application context
      */
     public static void raiseAlarm(Context context) {
-        //todo
+        NotificationHandler.clearNotification(context);
+        AlarmHandler.raiseAlarm(context);
     }
 
     /**
