@@ -14,7 +14,7 @@ public class UserNotifier {
      * @param context   the application context
      */
     public static void raiseNotification(Context context) {
-        //todo
+        NotificationHandler.postNotification(context);
     }
 
     /**

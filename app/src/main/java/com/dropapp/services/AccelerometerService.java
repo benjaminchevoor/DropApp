@@ -164,16 +164,16 @@ public class AccelerometerService implements SensorEventListener {
          * @return          true if resting, false otherwise.
          */
         private boolean onPerson(double vector) {
-            // Kind of dangerous because this assumes vector = rest avg so this all depends
-            // on the amount of time we wait to validate to ensure vector = rest avg
-            for (int i = 0; i < 10; i++) {
-                if (this.previousVectors[i] > vector)
-                    if (this.previousVectors[i] - vector > 1.5)
-                        return false;
-                    else if (this.previousVectors[i] - vector < -1.5)
-                        return false;
-            }
-            return true;
+//            // Kind of dangerous because this assumes vector = rest avg so this all depends
+//            // on the amount of time we wait to validate to ensure vector = rest avg
+//            for (int i = 0; i < 10; i++) {
+//                if (this.previousVectors[i] > vector)
+//                    if (this.previousVectors[i] - vector > 1.5)
+//                        return false;
+//                    else if (this.previousVectors[i] - vector < -1.5)
+//                        return false;
+//            }
+            return false;
         }
 
     }

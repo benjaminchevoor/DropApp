@@ -1,4 +1,4 @@
-package com.dropapp.Misc;
+package com.dropapp.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,7 +14,7 @@ public class Settings {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("email", email);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getEmail(Context context) {
@@ -30,7 +30,7 @@ public class Settings {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         putDouble(editor, "threshold", threshold);
-        editor.commit();
+        editor.apply();
     }
 
     public static double getThreshold (Context context) {

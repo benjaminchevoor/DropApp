@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
+import com.dropapp.R;
 import com.dropapp.activities.MainActivity;
 
 /**
@@ -39,6 +40,7 @@ public class NotificationHandler {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder.setSmallIcon(R.drawable.ic_sync_black_24dp);
 
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
