@@ -17,6 +17,17 @@ public class Settings {
         editor.apply();
     }
 
+    public static void isEmailEnabled(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edit = prefs.edit();
+
+        /*email_notification is the key*/
+
+        /*return prefs.getBoolean(email_notification);*/
+
+        edit.apply();
+    }
+
     public static String getEmail(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 

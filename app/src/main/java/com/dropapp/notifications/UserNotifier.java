@@ -34,6 +34,6 @@ public class UserNotifier {
      * @param context   the application context
      */
     public static void notifyPhoneLostEvent(Context context) {
-        //todo
+        EmailHandler.notifyDropLocation(context);
     }
 }
