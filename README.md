@@ -14,4 +14,14 @@ March 27-April 2 Weekly Progress:
   Modified the app to record accelorometer data
   Collected various accelorometer data
   Began designing the algorithm to detect a drop
+
+April 3-10 Weekly progress:
+  Basic implementation of the algorithm
+    Implemented 2 state machines
+      one that detects the drops and the other that takes action when there is a drop
+  Added notifications
+  Added more debug information on the app 
+  Added api for saving user settings
+  
+  
   
