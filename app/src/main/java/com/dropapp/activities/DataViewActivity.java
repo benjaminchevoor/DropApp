@@ -2,15 +2,18 @@ package com.dropapp.activities;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,6 +30,9 @@ import com.db.chart.model.BarSet;
 import com.db.chart.view.BarChartView;
 import com.dropapp.R;
 import com.dropapp.logger.Logger;
+import com.dropapp.services.AccelerometerService;
+import com.dropapp.services.DropDetectionService;
+import com.dropapp.services.DropServiceBinder;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -49,9 +55,10 @@ public class DataViewActivity extends AppCompatActivity {
         }
     };
 
-    private Button recordButton;
-    private EditText fileNameEditText;
+//    private Button recordButton;
+//    private EditText fileNameEditText;
     private TextView outputTextView;
+    private BarChartView barChartView;
     private Bar xBar;
     private Bar yBar;
     private Bar zBar;
@@ -69,7 +76,7 @@ public class DataViewActivity extends AppCompatActivity {
 
         this.outputTextView = (TextView) this.findViewById(R.id.outputTextView);
 
-        final BarChartView barChartView = (BarChartView) this.findViewById(R.id.barChartView);
+        this.barChartView = (BarChartView) this.findViewById(R.id.barChartView);
         barChartView.setBarBackgroundColor(Color.BLACK);
         barChartView.setBarSpacing(10);
         barChartView.setSetSpacing(10);
@@ -110,143 +117,143 @@ public class DataViewActivity extends AppCompatActivity {
 //            }
 //        });
 
-        this.fileNameEditText = (EditText) this.findViewById(R.id.fileNameEditText);
+//        this.fileNameEditText = (EditText) this.findViewById(R.id.fileNameEditText);
+//
+//        this.recordButton = (Button) this.findViewById(R.id.recordButton);
+//        this.recordButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                recordButtonPressed();
+//            }
+//        });
 
-        this.recordButton = (Button) this.findViewById(R.id.recordButton);
-        this.recordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recordButtonPressed();
-            }
-        });
-
-        Button optionsButton = (Button) this.findViewById(R.id.optionsButton);
-        optionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayOptionsMenu();
-            }
-        });
+//        Button optionsButton = (Button) this.findViewById(R.id.optionsButton);
+//        optionsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                displayOptionsMenu();
+//            }
+//        });
     }
 
-    private void recordButtonPressed() {
-        if (this.fileWriter == null) {
-            try {
-                String fileName = this.fileNameEditText.getText().toString();
-                if (!fileName.isEmpty()) {
-                    if (!fileName.endsWith(".txt")) {
-                        fileName += ".txt";
-                    }
+//    private void recordButtonPressed() {
+//        if (this.fileWriter == null) {
+//            try {
+//                String fileName = this.fileNameEditText.getText().toString();
+//                if (!fileName.isEmpty()) {
+//                    if (!fileName.endsWith(".txt")) {
+//                        fileName += ".txt";
+//                    }
+//
+//                    try {
+//                        File rootPath = Environment.getExternalStorageDirectory().getAbsoluteFile();
+//                        File folder = new File(rootPath, "dropapp");
+//                        if (!folder.exists() && !folder.mkdir()) {
+//                            throw new RuntimeException("Failed to make dropapp folder");
+//                        }
+//
+//                        this.file = new File(folder, fileName);
+//                        this.fileWriter = new PrintWriter(this.file);
+//                        this.recordButton.setText("stop");
+//
+//                        this.startRecordTime = System.currentTimeMillis();
+//                    } catch (Exception e) {
+//                        Toast.makeText(DataViewActivity.this, "Failed to open file to write", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(DataViewActivity.this, "Please enter a file name", Toast.LENGTH_SHORT).show();
+//                }
+//            } catch (Exception e) {
+//                Toast.makeText(DataViewActivity.this, "Failed to toString() file name", Toast.LENGTH_LONG).show();
+//            }
+//        } else {
+//            this.recordButton.setText("record");
+//            try {
+//                long duration = System.currentTimeMillis() - startRecordTime;
+//                fileWriter.write("\n\nDuration: " + duration + "ms");
+//
+//                PrintWriter fw = this.fileWriter;
+//                final File savedFile = this.file;
+//
+//                this.fileWriter = null;
+//                this.file = null;
+//
+//                fw.flush();
+//                fw.close();
+//
+//                Snackbar.make(this.outputTextView, savedFile.getName() + " recorded", Snackbar.LENGTH_LONG)
+//                        .setAction("Share", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                shareFile(savedFile);
+//                            }
+//                        })
+//                        .show();
+//            } catch (Exception e) {
+//                Toast.makeText(DataViewActivity.this, "Failed to close file", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
 
-                    try {
-                        File rootPath = Environment.getExternalStorageDirectory().getAbsoluteFile();
-                        File folder = new File(rootPath, "dropapp");
-                        if (!folder.exists() && !folder.mkdir()) {
-                            throw new RuntimeException("Failed to make dropapp folder");
-                        }
-
-                        this.file = new File(folder, fileName);
-                        this.fileWriter = new PrintWriter(this.file);
-                        this.recordButton.setText("stop");
-
-                        this.startRecordTime = System.currentTimeMillis();
-                    } catch (Exception e) {
-                        Toast.makeText(DataViewActivity.this, "Failed to open file to write", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(DataViewActivity.this, "Please enter a file name", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                Toast.makeText(DataViewActivity.this, "Failed to toString() file name", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            this.recordButton.setText("record");
-            try {
-                long duration = System.currentTimeMillis() - startRecordTime;
-                fileWriter.write("\n\nDuration: " + duration + "ms");
-
-                PrintWriter fw = this.fileWriter;
-                final File savedFile = this.file;
-
-                this.fileWriter = null;
-                this.file = null;
-
-                fw.flush();
-                fw.close();
-
-                Snackbar.make(this.outputTextView, savedFile.getName() + " recorded", Snackbar.LENGTH_LONG)
-                        .setAction("Share", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                shareFile(savedFile);
-                            }
-                        })
-                        .show();
-            } catch (Exception e) {
-                Toast.makeText(DataViewActivity.this, "Failed to close file", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void displayOptionsMenu() {
-        File rootDir = Environment.getExternalStorageDirectory();
-        File folder = new File(rootDir, "dropapp");
-        final File[] files = folder.listFiles();
-
-        if (files == null || files.length == 0) {
-            Toast.makeText(DataViewActivity.this, "No files to share", Toast.LENGTH_SHORT).show();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(DataViewActivity.this);
-            builder.setTitle("Recorded files");
-
-            List<String> fileNames = new ArrayList<>();
-            for (File f : files) {
-                fileNames.add(f.getName());
-            }
-
-            final AtomicReference<File> selectedFile = new AtomicReference<>(files[0]);
-            builder.setSingleChoiceItems(fileNames.toArray(new String[files.length]), 0, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    selectedFile.set(files[which]);
-                }
-            });
-            builder.setNegativeButton("Cancel", null);
-            builder.setNeutralButton("Delete", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    final File deleteFile = selectedFile.get();
-
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(DataViewActivity.this);
-
-                    builder1.setMessage("Are you sure you want to delete " + deleteFile.getName() + "?");
-
-                    builder1.setNegativeButton("Cancel", null);
-
-                    builder1.setPositiveButton("Delete " + deleteFile.getName(), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (deleteFile.delete()) {
-                                Toast.makeText(DataViewActivity.this, "File deleted", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(DataViewActivity.this, "Failed to delete file", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-
-                    builder1.create().show();
-                }
-            });
-            builder.setPositiveButton("Share", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    shareFile(selectedFile.get());
-                }
-            });
-
-            builder.create().show();
-        }
-    }
+//    private void displayOptionsMenu() {
+//        File rootDir = Environment.getExternalStorageDirectory();
+//        File folder = new File(rootDir, "dropapp");
+//        final File[] files = folder.listFiles();
+//
+//        if (files == null || files.length == 0) {
+//            Toast.makeText(DataViewActivity.this, "No files to share", Toast.LENGTH_SHORT).show();
+//        } else {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(DataViewActivity.this);
+//            builder.setTitle("Recorded files");
+//
+//            List<String> fileNames = new ArrayList<>();
+//            for (File f : files) {
+//                fileNames.add(f.getName());
+//            }
+//
+//            final AtomicReference<File> selectedFile = new AtomicReference<>(files[0]);
+//            builder.setSingleChoiceItems(fileNames.toArray(new String[files.length]), 0, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    selectedFile.set(files[which]);
+//                }
+//            });
+//            builder.setNegativeButton("Cancel", null);
+//            builder.setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    final File deleteFile = selectedFile.get();
+//
+//                    AlertDialog.Builder builder1 = new AlertDialog.Builder(DataViewActivity.this);
+//
+//                    builder1.setMessage("Are you sure you want to delete " + deleteFile.getName() + "?");
+//
+//                    builder1.setNegativeButton("Cancel", null);
+//
+//                    builder1.setPositiveButton("Delete " + deleteFile.getName(), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            if (deleteFile.delete()) {
+//                                Toast.makeText(DataViewActivity.this, "File deleted", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(DataViewActivity.this, "Failed to delete file", Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    });
+//
+//                    builder1.create().show();
+//                }
+//            });
+//            builder.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    shareFile(selectedFile.get());
+//                }
+//            });
+//
+//            builder.create().show();
+//        }
+//    }
 
     private void shareFile(File file) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
@@ -303,6 +310,9 @@ public class DataViewActivity extends AppCompatActivity {
         }).start();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(logBroadcastReceiver, new IntentFilter(Logger.BROADCAST));
+
+        Intent i = new Intent(this, DropDetectionService.class);
+        this.bindService(i, serviceConnection, 0);
     }
 
     @Override
@@ -314,6 +324,38 @@ public class DataViewActivity extends AppCompatActivity {
         this.isResumed = false;
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(logBroadcastReceiver);
+
+        this.unbindService(serviceConnection);
     }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            DropServiceBinder binder = (DropServiceBinder) iBinder;
+            binder.setAccelerometerDataListener(new AccelerometerService.RawAccelerometerDataListener() {
+                @Override
+                public void newData(float x, float y, float z) {
+                    double avg = Math.sqrt((x * x) + (y * y) + (z * z));
+                    String format = String.format("%9.5f, %9.5f, %9.5f, %9.5f\n", x, y, z, avg);
+//                  outputTextView.append(format);
+
+                    xBar.setValue(x);
+                    yBar.setValue(y);
+                    zBar.setValue(z);
+                    barChartView.show();
+
+                    PrintWriter pw = fileWriter;
+                    if (pw != null) {
+                        pw.write(format);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
 }
