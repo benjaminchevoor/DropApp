@@ -37,7 +37,7 @@ public class AccelerometerService implements SensorEventListener {
             DROP_REST
         }
 
-        private static final double DROPPED_VECTOR_THRESHOLD = 90.0;
+        private static final double DROPPED_VECTOR_THRESHOLD = 50.0;
         private static final double DROP_GRACE_PERIOD = 1_000;
         private static final double DROP_REST_PERIOD = 5_000;
 
@@ -63,9 +63,9 @@ public class AccelerometerService implements SensorEventListener {
             return Math.sqrt((x * x) + (y * y) + (z * z));
         }
 
-        private void storePrevTen(double curAvg){
+        private void storePrevTen(double vector){
             System.arraycopy(this.previousVectors, 0, this.previousVectors, 1, PREVIOUS_VECTORS_ARRAY_SIZE - 1);
-            this.previousVectors[0] = curAvg;
+            this.previousVectors[0] = vector;
         }
 
         private double getAvgOfPrevTen(){
@@ -88,6 +88,8 @@ public class AccelerometerService implements SensorEventListener {
 
         public void newData(float x, float y, float z) {
             double vector = getVector(x, y, z);
+
+            storePrevTen(vector);
 
             switch (this.dropListener.getState()) {
                 case MONITORING:
@@ -164,15 +166,15 @@ public class AccelerometerService implements SensorEventListener {
          * @return          true if resting, false otherwise.
          */
         private boolean onPerson(double vector) {
-//            // Kind of dangerous because this assumes vector = rest avg so this all depends
-//            // on the amount of time we wait to validate to ensure vector = rest avg
-//            for (int i = 0; i < 10; i++) {
-//                if (this.previousVectors[i] > vector)
-//                    if (this.previousVectors[i] - vector > 1.5)
-//                        return false;
-//                    else if (this.previousVectors[i] - vector < -1.5)
-//                        return false;
-//            }
+            // Kind of dangerous because this assumes vector = rest avg so this all depends
+            // on the amount of time we wait to validate to ensure vector = rest avg
+            for (int i = 0; i < 10; i++) {
+                if (this.previousVectors[i] > vector)
+                    if (this.previousVectors[i] - vector > 1.5)
+                        return true;
+                    else if (this.previousVectors[i] - vector < -1.5)
+                        return true;
+            }
             return false;
         }
 
