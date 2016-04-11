@@ -7,9 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ImageButton;
 
 import com.dropapp.R;
+import com.dropapp.services.DropDetectionService;
 
 public class MainActivity extends Activity {
 
@@ -18,19 +19,40 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button toggleServiceButton = (Button) this.findViewById(R.id.toggleServiceButton);
+        final Button toggleServiceButton = (Button) this.findViewById(R.id.toggleServiceButton);
         toggleServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Fuck you", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this, DropDetectionService.class);
+
+                if (DropDetectionService.IS_RUNNING) {
+                    stopService(i);
+                    toggleServiceButton.setText("START");
+                } else {
+                    startService(i);
+                    toggleServiceButton.setText("STOP");
+                }
             }
         });
+
+        if (DropDetectionService.IS_RUNNING) {
+            toggleServiceButton.setText("STOP");
+        }
 
         Button viewDataButton = (Button) this.findViewById(R.id.viewDataButton);
         viewDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, DataViewActivity.class);
+                startActivity(i);
+            }
+        });
+
+        ImageButton settingsButton = (ImageButton) this.findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(i);
             }
         });
