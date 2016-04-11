@@ -22,6 +22,7 @@ April 3-10 Weekly progress:
   Added notifications
   Added more debug information on the app 
   Added api for saving user settings
+
 April 11-17 weekly progress:
   Implemented correct grace period behavior
     if phone moves when checking for rest do not fire alarm
