@@ -124,6 +124,7 @@ public class AccelerometerService implements SensorEventListener {
                                 //user has moved their phone, reset
                                 this.reset();
                             } else if (this.dropEpoch + DROP_GRACE_PERIOD + DROP_REST_PERIOD < System.currentTimeMillis()) {
+                                this.reset();
                                 this.dropListener.notifyDrop();
                             }
                             break;

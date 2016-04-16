@@ -42,6 +42,13 @@ public class NotificationHandler {
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setSmallIcon(R.drawable.ic_sync_black_24dp);
 
+        Intent i = new Intent(NotificationActionReceiver.ACTION_CLEAR_DROP);
+        i.putExtra(NotificationActionReceiver.EXTRA_NOTIFICATION, true);
+        PendingIntent clear = PendingIntent.getBroadcast(context, NotificationActionReceiver.REQUEST_CODE, i, 0);
+        mBuilder.addAction(R.drawable.ic_notifications_black_24dp, "Stop", clear);
+
+        mBuilder.setDeleteIntent(clear);
+
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.

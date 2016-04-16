@@ -43,6 +43,13 @@ public class DropDetectionService extends Service {
                 this.task.cancel();
                 this.task = null;
                 this.currentState = State.MONITORING;
+
+                try {
+                    Logger.log(this.getContext(), "User cleared drop state");
+                    DropStateLogger.logTransition(this.getContext(), State.MONITORING);
+                } catch (Exception e) {
+                    //do nothing
+                }
             }
         }
 

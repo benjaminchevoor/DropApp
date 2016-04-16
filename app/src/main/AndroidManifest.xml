@@ -36,6 +36,12 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"/>
+
+        <receiver android:name=".notifications.NotificationActionReceiver">
+            <intent-filter>
+                <action android:name="com.dropapp.cleardrop"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

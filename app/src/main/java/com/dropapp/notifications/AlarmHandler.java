@@ -43,6 +43,13 @@ public class AlarmHandler {
         mBuilder.setSmallIcon(R.drawable.ic_warning);
         mBuilder.setVibrate(new long[] {0, 1000, 500, 1000, 500, 1000});
 
+        Intent i = new Intent(NotificationActionReceiver.ACTION_CLEAR_DROP);
+        i.putExtra(NotificationActionReceiver.EXTRA_ALARM, true);
+        PendingIntent clear = PendingIntent.getBroadcast(context, NotificationActionReceiver.REQUEST_CODE, i, 0);
+        mBuilder.addAction(R.drawable.ic_notifications_black_24dp, "Stop", clear);
+
+        mBuilder.setDeleteIntent(clear);
+
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
@@ -50,7 +57,10 @@ public class AlarmHandler {
     }
 
     /*pkg*/ static void clearAlarm(Context context) {
-
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.cancel(NOTIFICATION_ID);
     }
 
 }

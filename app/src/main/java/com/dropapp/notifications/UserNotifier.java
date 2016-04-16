@@ -36,4 +36,9 @@ public class UserNotifier {
     public static void notifyPhoneLostEvent(Context context) {
         EmailHandler.notifyDropLocation(context);
     }
+
+    public static void clearNotification(Context context) {
+        NotificationHandler.clearNotification(context);
+        AlarmHandler.clearAlarm(context);
+    }
 }
