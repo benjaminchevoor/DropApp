@@ -11,6 +11,9 @@ import android.widget.ImageButton;
 
 import com.dropapp.R;
 import com.dropapp.services.DropDetectionService;
+import com.dropapp.util.Util;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 public class MainActivity extends Activity {
 
@@ -56,6 +59,10 @@ public class MainActivity extends Activity {
                 startActivity(i);
             }
         });
+
+        Tracker tracker = Util.getTracker(this);
+        tracker.setScreenName("MainActivity");
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

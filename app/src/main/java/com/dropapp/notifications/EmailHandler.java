@@ -3,7 +3,7 @@ package com.dropapp.notifications;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
-import android.app.Activity;
+
 import com.dropapp.util.Settings;
 
 
@@ -24,6 +24,7 @@ public class EmailHandler {
         String from = "Sender email here";*/
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra(Intent.EXTRA_EMAIL, new String[]{Settings.getEmail(context)});
         i.putExtra(Intent.EXTRA_SUBJECT, "DropApp Notification");
         i.putExtra(Intent.EXTRA_TEXT   , "Hello DropApp user.  You have dropped your phone" +
