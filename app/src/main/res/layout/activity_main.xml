@@ -23,10 +23,10 @@
             android:id="@+id/toggleServiceButton"
             android:layout_gravity="center_horizontal"
             android:textSize="30dp"
-            />
+            style="@style/Widget.AppCompat.Button.Borderless"/>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,12 +36,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="View Data"
-            android:id="@+id/viewDataButton"/>
+            android:id="@+id/viewDataButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
 
         <ImageButton
             android:layout_width="45dp"
             android:layout_height="41dp"
             android:id="@+id/settingsButton"
-            android:src="@android:drawable/ic_menu_preferences" />
-    </LinearLayout>
+            android:src="@android:drawable/ic_menu_preferences"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/viewDataButton"
+            android:layout_toEndOf="@+id/viewDataButton"
+            android:layout_marginLeft="36dp"
+            android:layout_marginStart="36dp"/>
+    </RelativeLayout>
 </LinearLayout>

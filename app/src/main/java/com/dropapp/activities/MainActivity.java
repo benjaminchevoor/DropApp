@@ -11,16 +11,24 @@ import android.widget.ImageButton;
 
 import com.dropapp.R;
 import com.dropapp.services.DropDetectionService;
+import com.dropapp.util.Settings;
 import com.dropapp.util.Util;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 public class MainActivity extends Activity {
 
+    private static final int SETUP_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (!Settings.hasFinishedSetup(this)) {
+            Intent i = new Intent(this, SetupActivity.class);
+            startActivityForResult(i, SETUP_REQUEST_CODE);
+        }
 
         final Button toggleServiceButton = (Button) this.findViewById(R.id.toggleServiceButton);
         toggleServiceButton.setOnClickListener(new View.OnClickListener() {
@@ -85,5 +93,18 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case SETUP_REQUEST_CODE:
+                if (resultCode == SetupActivity.SETUP_COMPLETE) {
+                    Settings.setSetupFinished(this);
+                }
+                break;
+        }
     }
 }

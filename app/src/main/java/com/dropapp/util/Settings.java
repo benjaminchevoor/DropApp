@@ -9,6 +9,20 @@ import android.preference.PreferenceManager;
  */
 public class Settings {
 
+    private static final String IS_INITIALIZED = "isInitialized";
+    private static final String IS_EMAIL_NOTIFICATIONS_ENABLED = "notificationEmailsEnabled";
+
+
+    public static boolean hasFinishedSetup(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(IS_INITIALIZED, false);
+    }
+
+    public static void setSetupFinished(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putBoolean(IS_INITIALIZED, true).apply();
+    }
+
     public static void setEmail(Context context, String email) {
         // do stuffs
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -56,5 +70,14 @@ public class Settings {
 
     private static double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
+    }
+
+    public static boolean isEmailNotificationsEnabled(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(IS_EMAIL_NOTIFICATIONS_ENABLED, true);
+    }
+
+    public static void setEnableEmailNotification(Context context, boolean isEnabled) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putBoolean(IS_EMAIL_NOTIFICATIONS_ENABLED, isEnabled).apply();
     }
 }
