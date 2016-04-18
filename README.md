@@ -27,16 +27,18 @@ April 11-17 weekly progress:
   Implemented correct grace period behavior
     if phone moves when checking for rest do not fire alarm
   Created logo!
-
-April 18-23 weekly progress:
   Worked on setup page
     runs when app is first loaded
       take in users email address and calibrate device
   Added ability for user to dismiss drop notification
   Starting working of presentation
+
+April 18-23 weekly progress:
   Talked about feasibility of Android Activity
   Adjust calibration to do it multiple times
     user drops phone 3 times from waist height on soft surface
+  Worked on email notification
+  More work on presentation
   
   
   TODO
