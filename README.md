@@ -34,10 +34,10 @@ April 18-23 weekly progress:
       take in users email address and calibrate device
   Added ability for user to dismiss drop notification
   Starting working of presentation
+  Talked about feasibility of Android Activity
   
   
   TODO
-  Hook up android activity
-  Email notification with gps coordinates
-
+    Email notification with gps coordinates
+    Drop validation to determine max
   
