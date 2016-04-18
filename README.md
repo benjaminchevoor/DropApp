@@ -35,9 +35,11 @@ April 18-23 weekly progress:
   Added ability for user to dismiss drop notification
   Starting working of presentation
   Talked about feasibility of Android Activity
+  Adjust calibration to do it multiple times
+    user drops phone 3 times from waist height on soft surface
   
   
   TODO
     Email notification with gps coordinates
-    Drop validation to determine max
+    hook up settings to calibrate multiple times
   
