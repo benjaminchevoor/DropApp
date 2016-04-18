@@ -38,7 +38,6 @@ April 18-23 weekly progress:
   
   TODO
   Hook up android activity
-  fix clearing notification not going back to monitor bug
   Email notification with gps coordinates
 
   
