@@ -16,10 +16,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="For DropApp to function optimally, a calibration test must be taken. Press the &apos;Start calibration&apos; button, then strongly shake your phone until you feel it vibrate."
+            android:text="For DropApp to function optimally, a calibration test must be taken. Press the &apos;Start calibration&apos; button, then drop your phone from 3 feet high (waist height) onto a pillow."
             android:id="@+id/calibrationLabel"
             android:layout_margin="16dp"
             android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Note: we are not responsible for breaking your phone :)"
+            android:id="@+id/textView"/>
 
         <Button
             android:layout_width="wrap_content"
