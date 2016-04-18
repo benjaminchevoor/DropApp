@@ -27,6 +27,7 @@ April 11-17 weekly progress:
   Implemented correct grace period behavior
     if phone moves when checking for rest do not fire alarm
   Created logo!
+
 April 18-23 weekly progress:
   Worked on setup page
     runs when app is first loaded
