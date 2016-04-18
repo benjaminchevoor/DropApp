@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dropapp.R;
+import com.dropapp.util.Settings;
 
 
 public class AccelerometerCalibrationFragment extends Fragment {
@@ -74,6 +75,8 @@ public class AccelerometerCalibrationFragment extends Fragment {
     private void stopCalibration(double newThreshold) {
         this.thresholdTextView.setText(String.format("New threshold: %.4f", newThreshold));
         this.progressBar.setVisibility(View.INVISIBLE);
+
+        Settings.setThreshold(this.getContext(), newThreshold);
 
         Vibrator v = (Vibrator) this.getContext().getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 500 milliseconds

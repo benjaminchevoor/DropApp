@@ -48,17 +48,14 @@ public class Settings {
         return prefs.getString("email", "");
     }
 
-    public static void setThreshold (Context context) {
-        // shake device, grab maximum value
-        double threshold = 0;
-
+    public static void setThreshold(Context context, double threshold) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         putDouble(editor, "threshold", threshold);
         editor.apply();
     }
 
-    public static double getThreshold (Context context) {
+    public static double getThreshold(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         return getDouble(prefs, "threshold", 0);
