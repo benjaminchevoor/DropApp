@@ -3,18 +3,14 @@ package com.dropapp.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.dropapp.DropApp;
 import com.dropapp.R;
 import com.dropapp.services.DropDetectionService;
-import com.dropapp.services.EmailService;
 import com.dropapp.util.Settings;
 import com.dropapp.util.Util;
 import com.google.android.gms.analytics.HitBuilders;
@@ -76,24 +72,6 @@ public class MainActivity extends Activity {
         Tracker tracker = Util.getTracker(this);
         tracker.setScreenName("MainActivity");
         tracker.send(new HitBuilders.ScreenViewBuilder().build());
-
-
-        //Email test
-        EmailService m = new EmailService("dropappemailservice@gmail.com", "DropAppEmail");
-
-        String[] toArr = {"kyleozhang@gmail.com.com", "chang101@aol.com"};
-        m.setTo(toArr);
-        m.setFrom("wooo@wooo.com");
-        m.setSubject("This is an email sent using my Mail JavaMail wrapper from an Android device.");
-        m.setBody("Email body.");
-
-        try {
-            m.addAttachment("/sdcard/filelocation");
-        } catch(Exception e) {
-            //Toast.makeText(MailApp.this, "There was a problem sending the email.", Toast.LENGTH_LONG).show();
-            Log.e("MailApp", "Could not send email", e);
-        }
-
 }
 
     @Override
