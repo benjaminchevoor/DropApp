@@ -27,18 +27,15 @@ public class EmailHandler implements LocationListener {
      *
      * @param context
      */
-    static double longitude;
-    static double latitude;
 
+    static Context context;
     @Override
     public void onLocationChanged(Location loc) {
-         longitude = loc.getLongitude();
-         latitude = loc.getLatitude();
-    }
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.removeUpdates(this); 
 
-
-    public static void notifyDropLocation(final Context context){
-
+         double longitude = loc.getLongitude();
+         double latitude = loc.getLatitude();
 
         BackgroundMail.newBuilder(context)
                 .withUsername("dropappemailservice@gmail.com")
@@ -60,6 +57,17 @@ public class EmailHandler implements LocationListener {
                     }
                 })
                 .send();
+    }
+
+
+    public static void notifyDropLocation(final Context context){
+
+        LocationManager locationManager = (LocationManager)
+                context.getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener locationListener = new EmailHandler();
+        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 10000, 0, locationListener);
+
     }
 
     @Override
