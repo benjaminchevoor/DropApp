@@ -33,12 +33,16 @@ April 11-17 weekly progress:
   Added ability for user to dismiss drop notification
   Starting working of presentation
 
-April 18-23 weekly progress:
+April 18-24 weekly progress:
   Talked about feasibility of Android Activity
   Adjust calibration to do it multiple times
     user drops phone 3 times from waist height on soft surface
   Worked on email notification
   More work on presentation
+  Worked on report
+  ability for user to enter email
+  Got email to send (GmailBackground library), still need coordinates
+    sends email without intent (no user interaction)
   
   
   TODO
