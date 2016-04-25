@@ -1,89 +1,16 @@
 package com.dropapp.notifications;
 
 import android.content.Context;
-import android.content.Intent;
-import android.location.LocationListener;
-import android.os.Bundle;
-import android.widget.Toast;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-
-import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
-import com.dropapp.util.Settings;
 
 
 /**
  * Created by benjaminchevoor on 4/4/16.
  * Edited by Josh Blanchette on 4/11/16.
  */
-public class EmailHandler implements LocationListener {
+public class EmailHandler {
 
-    /**
-     * Called when an email should be sent to the user
-     * JB: Definitely plan on using some sort of intent, otherwise we would have to write
-     * our own client.
-     *
-     * @param context
-     */
-
-    static Context context;
-    @Override
-    public void onLocationChanged(Location loc) {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.removeUpdates(this); 
-
-         double longitude = loc.getLongitude();
-         double latitude = loc.getLatitude();
-
-        BackgroundMail.newBuilder(context)
-                .withUsername("dropappemailservice@gmail.com")
-                .withPassword("DropAppEmail")
-                .withMailto(Settings.getEmail(context))
-                .withSubject("Phone lost!")
-                .withBody("Here is a link to where your phone is. " +
-                        "http://maps.google.com/maps?q=loc:" +latitude +"," +longitude)
-                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(context, "Email sent!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
-                    @Override
-                    public void onFail() {
-                        Toast.makeText(context, "Email failed!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .send();
-    }
-
-
-    public static void notifyDropLocation(final Context context){
-
-        LocationManager locationManager = (LocationManager)
-                context.getSystemService(Context.LOCATION_SERVICE);
-
-        LocationListener locationListener = new EmailHandler();
-        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 10000, 0, locationListener);
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider,
-                                int status, Bundle extras) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
+    public static void notifyDropLocation(final Context context) {
+        EmailService.emailUserGpsCoordinates(context);
     }
 
 }

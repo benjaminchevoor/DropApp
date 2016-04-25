@@ -45,9 +45,15 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.SetupActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".activities.SetupActivity"
+            android:screenOrientation="portrait">
         </activity>
+
+        <service
+            android:name=".notifications.EmailService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>
