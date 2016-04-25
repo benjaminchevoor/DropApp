@@ -44,8 +44,6 @@ April 18-24 weekly progress:
   Got email to send (GmailBackground library), still need coordinates
     sends email without intent (no user interaction)
   
-  
   TODO
     Email notification with gps coordinates
-    hook up settings to calibrate multiple times
   
