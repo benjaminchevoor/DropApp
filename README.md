@@ -3,6 +3,8 @@ An Android app designed to detect when a device is dropped.
 
 This project is for Professor Guanling Chen's Ubiquitous Computing class of Spring 2016.
 
+(Demo video: https://www.youtube.com/watch?v=TwwubQV7pbg)
+
 March 14-26 Progress:
   Documented project requirements
   Created github repositiory
